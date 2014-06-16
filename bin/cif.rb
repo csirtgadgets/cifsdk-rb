@@ -52,7 +52,11 @@ def main(argv)
   cli = CIF::SDK::Client.new(conf)
   case command
   when 'ping'
-    cli.ping()
+    for i in 0 ... 3
+      ret = cli.ping()
+      puts "roundtrip: #{ret}ms..."
+      select(nil,nil,nil,1)
+    end
   when 'query'
     cli.search(conf)
   when 'submit'
