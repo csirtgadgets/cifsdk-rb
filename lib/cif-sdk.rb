@@ -1,0 +1,1 @@
+require 'cif-sdk/client'
