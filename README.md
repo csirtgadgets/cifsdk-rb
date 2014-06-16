@@ -7,10 +7,36 @@ The CIF Software Development Kit (SDK) for Ruby contains library code and exampl
 # Examples
 ## Client
 ```ruby
+require 'cif-sdk'
+
+config = {
+  :token  => '1234',
+  :remote => 'https://localhost/api'
+}
+
+cli = CIF::SDK::Client(config)
 ```
 ## Search
+```ruby
+r = cli.search(:query => 'example.com')
+```
+
 ## Ping
+```ruby
+r = cli.ping()
+
+puts "ping successful"
+```
 ## Submit
+```ruby
+obs = {
+  :observable => 'example.com',
+  :tlp        => 'amber',
+  :provider   => 'me@me.com',
+  :group      => 'everyone',
+}
+r = cli.submit(obs)
+```
 
 # License and Copyright
 Copyright (C) 2014 the CSIRT Gadgets Foundation
