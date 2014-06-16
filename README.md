@@ -5,6 +5,11 @@ The CIF Software Development Kit (SDK) for Ruby contains library code and exampl
 [![Build Status](https://travis-ci.org/csirtgadgets/rb-cif-sdk.svg?branch=master)](https://travis-ci.org/csirtgadgets/rb-cif-sdk) [![Coverage Status](https://coveralls.io/repos/csirtgadgets/rb-cif-sdk/badge.png)](https://coveralls.io/r/csirtgadgets/rb-cif-sdk)
 
 # Installation
+## Ubuntu
+```bash
+$ sudo apt-get update && sudo apt-get upgrade -y
+$ sudo apt-get install -y libyaml-dev ruby2.0-dev
+```
 
 # Examples
 ## Client
