@@ -14,4 +14,7 @@ end
 group :production do
   gem 'httpclient'
   gem 'json'
+  gem 'logger'
+  gem 'logger/colors'
+  gem 'parseconfig'
 end
