@@ -1,26 +1,18 @@
+lib = File.expand_path('../lib',__FILE__)
+$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
+require 'cif-sdk/version'
+
 Gem::Specification.new do |s|
-  s.name               = "cif.sdk"
-  s.version            = "0.0.1"
-  s.default_executable = "cif"
+  s.name               = "cif-sdk"
+  s.version            = CIF::SDK::VERSION
+  s.authors         = ["CSIRT Gadgets Foundation"]
+  s.description     = %q{Ruby SDK for CIF}
+  s.email           = %q{wes@barely3am.com}
+  s.files           = Dir["{bin,spec,lib}/**/*"] + ["Rakefile", "README.md", "Gemfile"]
+  s.homepage        = %q{https://github.com/csirtgadgets/rb-cif-sdk}
+  s.require_paths   = ["lib"]
+  s.summary         = %q{Ruby SDK for CIF!}
+  s.executables     = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
+  s.test_files      = gem.files.grep(%r{^(test|spec|features)/})
 
-  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Wes Young"]
-  s.date = %q{2014-06-16}
-  s.description = %q{Ruby SDK for CIF}
-  s.email = %q{wes@barely3am.com}
-  s.files = ["Rakefile", "lib/cif/sdk.rb", "bin/cif"]
-  s.test_files = ["test/test_cif.rb"]
-  s.homepage = %q{http://rubygems.org/gems/cif.sdk}
-  s.require_paths = ["lib"]
-  s.rubygems_version = %q{2.1}
-  s.summary = %q{Ruby SDK for CIF!}
-
-  if s.respond_to? :specification_version then
-    s.specification_version = 3
-
-    if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
-    else
-    end
-  else
-  end
 end

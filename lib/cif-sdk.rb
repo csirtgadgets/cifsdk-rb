@@ -1,4 +1,5 @@
-require_relative 'cif-sdk/client'
+require 'cif-sdk/sdk'
+require 'cif-sdk/client'
 
 module CIF
   module SDK

@@ -13,3 +13,8 @@ group :development do
   gem "jeweler", "~> 2.0.1"
   gem "simplecov", ">= 0"
 end
+
+group :production do
+  gem 'httpclient'
+  gem 'json'
+end

@@ -7,18 +7,16 @@ require 'openssl'
 module CIF
   module SDK
     class Client
-      def initialize(args)
-        @token  = args[:token]
-        @remote = args[:remote]
-        @verify_ssl = args[:verify_ssl]
-        @log = args[:log]
-        
+      attr_accessor :remote, :token, :verify_ssl, :log, :handle
+      
+      def initialize params = {}
+        params.each { |key, value| send "#{key}=", value }
         @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/0.0.1')
         unless @verify_ssl       
           @handle.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
       end
-
+ 
       def ping
         uri = '/_ping'
         params = {
