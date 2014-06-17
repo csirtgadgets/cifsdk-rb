@@ -1,4 +1,4 @@
-#!ruby
+#!/usr/bin/env ruby
 
 # https://github.com/splunk/splunk-sdk-ruby/blob/master/examples/run_examples.rb
 
