@@ -2,7 +2,6 @@ require 'json'
 require 'httpclient'
 require 'uri'
 require 'pp'
-require 'yaml'
 
 module CIF
   module SDK
@@ -17,24 +16,41 @@ module CIF
         end
       end
 
+      def _make_request(uri='',type='get',params={})
+        params['token'] = @token
+        pp type
+        case type
+        when 'get'
+          self.logger.debug { "uri: #{uri}" }
+          uri = URI(@remote + uri)
+          res = @handle.get(uri,params)
+        when 'post'
+          uri = URI(@remote + '/?token=' + @token.to_s)
+          self.logger.debug { "uri: #{uri}.to_s" }
+          res = @handle.post(uri,params['data'])
+        end
+
+        case res.status_code
+        when 200...299
+          return JSON.parse(res.body)
+        when 300...399
+          @logger.debug { "received: #{res.status_code}" }
+        when 400
+            @logger.warn { 'unauthorized, bad or missing token' }
+        when 404
+            @logger.warn { 'invalid remote uri: #{uri}.to_s' }
+        when 500...600
+          @logger.fatal { 'router failure, contact administrator' }
+        end
+        return nil
+
+      end
+
       def ping
-        uri = '/_ping'
-        params = {
-          :token => @token
-        }
-
-        uri = URI(@remote + uri)
-
         start = Time.now()
 
-        res = @handle.get(uri,params)
-        if res.status_code > 299
-          @logger.debug { "received: #{res.status_code}" }
-          if res.status_code == 400
-            @logger.warn { 'unauthorized, bad or missing token' }
-          end
-          return nil
-        end
+        rv = self._make_request(uri='/_ping')
+        return nil unless(rv)
 
         return (Time.now()-start)
       end
@@ -44,42 +60,30 @@ module CIF
           self.logger.fatal { 'missing param: query '}
           return nil
         end
-        params = {
-          :token  => @token,
-        }
-        uri = URI(@remote + '/' + q)
-        res = @handle.get(uri,params)
-        if res.status_code > 299
-          @logger.debug { "received: #{res.status_code}" }
-          if res.status_code == 400
-            @logger.warn { 'unauthorized, bad or missing token' }
-          elsif res.status_code >= 500
-            @logger.fatal { 'router failure, contact administrator' }
-          end
-          return nil
+
+        nlog = false
+        unless @log == nil
+          nlog = true
         end
-        return JSON.parse(res.body) # should always be an ARRAY
+        params = {
+          'nolog' => nlog,
+        }
+
+        res = self._make_request(uri="/#{q}",type='get',params=params)
+        return nil unless(res)
+        return res
 
       end
 
       def submit(data=nil)
         #  '{"observable":"example.com","confidence":"50",":tlp":"amber",
         #  "provider":"me.com","tags":["zeus","botnet"]}'
-
-        return nil if !data
-
-        uri = URI(@remote + '/?token=' + @token.to_s)
-        res = @handle.post(uri,data)
-        if res.status_code > 299
-          @logger.debug { "received: #{res.status_code}" }
-          if res.status_code == 400
-            @logger.warn { 'unauthorized, bad or missing token' }
-          elsif res.status_code >= 500
-            @logger.fatal { 'router failure, contact administrator' }
-          end
-          return nil
-        end
-        return JSON.parse(res.body)
+        params = {
+          'data' => data
+        }
+        res = self._make_request(uri='',type='post',params)
+        return nil unless(res)
+        return res
       end
     end
   end

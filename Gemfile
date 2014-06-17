@@ -16,5 +16,6 @@ group :production do
   gem 'json'
   gem 'logger'
   gem 'logger-colors'
-  gem "terminal-table"
+  gem 'terminal-table'
+  gem 'rake'
 end

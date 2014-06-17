@@ -1,4 +1,4 @@
-#!/usr/env/ruby
+#!ruby
 
 # https://github.com/splunk/splunk-sdk-ruby/blob/master/examples/run_examples.rb
 
@@ -6,7 +6,7 @@ require 'optparse'
 require 'cif-sdk'
 require 'pp'
 require 'logger'
-require 'logger-colors'
+require 'logger/colors'
 require 'yaml'
 require 'terminal-table'
 
