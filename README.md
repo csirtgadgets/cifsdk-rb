@@ -21,7 +21,12 @@ config = {
   :remote => 'https://localhost/api'
 }
 
-cli = CIF::SDK::Client(config)
+cli = CIF::SDK::Client.new(config)
+for i in 0 ... 3
+  ret = cli.ping()
+  puts "roundtrip: #{ret}ms..."
+  select(nil,nil,nil,1)
+end
 ```
 ## Search
 ```ruby
@@ -40,7 +45,7 @@ obs = {
   :observable => 'example.com',
   :tlp        => 'amber',
   :provider   => 'me@me.com',
-  :group      => 'everyone',
+  :group      => 'everyone'
 }
 r = cli.submit(obs)
 ```
