@@ -6,7 +6,7 @@ require 'optparse'
 require 'cif-sdk'
 require 'pp'
 require 'logger'
-require 'logger/colors'
+require 'logger-colors'
 require 'yaml'
 require 'terminal-table'
 

@@ -15,6 +15,6 @@ group :production do
   gem 'httpclient'
   gem 'json'
   gem 'logger'
-  gem 'logger/colors'
+  gem 'logger-colors'
   gem "terminal-table"
 end
