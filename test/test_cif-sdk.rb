@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'cif-sdk'
-require 'httpclient'
+
+# http://www.ruby-doc.org/stdlib-1.9.3/libdoc/minitest/unit/rdoc/MiniTest.html
 
 @remote = 'https://localhost:8444/api'
 @token = '1234444'

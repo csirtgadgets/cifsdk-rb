@@ -4,6 +4,9 @@ require 'uri'
 require 'pp'
 require 'openssl'
 
+## TODO - http://stackoverflow.com/questions/6715468/attr-accessor-default-values
+REMOTE_DEFAULT = 'https://localhost/api'
+
 module CIF
   module SDK
     class Client
@@ -11,6 +14,7 @@ module CIF
       
       def initialize params = {}
         params.each { |key, value| send "#{key}=", value }
+        print @remote
         @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/0.0.1')
         unless @verify_ssl       
           @handle.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
