@@ -11,7 +11,9 @@ $ sudo apt-get update && sudo apt-get upgrade -y
 $ sudo apt-get install -y libyaml-dev ruby2.0-dev build-essential git
 $ git clone https://github.com/csirtgadgets/rb-cif-sdk -b master
 $ cd rb-cif-sdk
-$ sudo gem install -v
+$ gem build cif-sdk.gemspec
+$ bundle install
+$ sudo gem install cif-sdk
 ```
 
 # Examples
