@@ -1,4 +1,4 @@
-# CIF Software Development Kit for Ruby 
+# CIF Software Development Kit for Ruby
 
 The CIF Software Development Kit (SDK) for Ruby contains library code and examples designed to enable developers to build applications using CIF.
 
@@ -20,8 +20,8 @@ $ sudo gem install -v
 require 'cif-sdk'
 
 config = {
-  :token  => '1234',
-  :remote => 'https://localhost/api'
+  token  => '1234',
+  remote => 'https://localhost/api'
 }
 
 cli = CIF::SDK::Client.new(config)
@@ -33,7 +33,7 @@ end
 ```
 ## Search
 ```ruby
-r = cli.search(:query => 'example.com')
+r = cli.search(query => 'example.com')
 ```
 
 ## Ping
@@ -44,13 +44,18 @@ puts "ping successful"
 ```
 ## Submit
 ```ruby
+require 'json'
+...
+
 obs = {
-  :observable => 'example.com',
-  :tlp        => 'amber',
-  :provider   => 'me@me.com',
-  :group      => 'everyone'
+  observable 	=> 'example.com',
+  tlp        	=> 'amber',
+  provider   	=> 'me@me.com',
+  group      	=> 'everyone',
+  tags			=> ['zeus','botnet'],
+  confidence	=> 85,
 }
-r = cli.submit(obs)
+r = cli.submit(data=json.generate(obs))
 ```
 
 # License and Copyright

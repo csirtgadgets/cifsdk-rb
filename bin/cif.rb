@@ -120,11 +120,11 @@ def main(argv)
   when 'query'
     r = cli.search(conf)
     table = make_table(cols=conf['columns'],rows=r)
-    #puts table
+    puts table
   when 'submit'
     r = cli.submit(data=conf['submission'])
     table = make_table(cols=conf['columns'],rows=r)
-    #puts table
+    puts table
   end
 end
 
