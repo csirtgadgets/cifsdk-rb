@@ -7,7 +7,7 @@ require 'cif-sdk/version'
 Gem::Specification.new do |spec|
   spec.name            = "cif-sdk"
   spec.version         = CIF::SDK::VERSION
-  spec.authors         = ["CSIRT Gadgets Foundation"]
+  spec.authors         = ["Wes Young", "CSIRT Gadgets Foundation"]
   spec.summary         = %q{Ruby SDK for CIF!}
   spec.description     = %q{Ruby SDK for CIF}
   spec.email           = %q{wes@barely3am.com}
