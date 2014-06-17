@@ -8,10 +8,35 @@ require 'pp'
 require 'logger'
 require 'logger/colors'
 require 'yaml'
+require 'terminal-table'
 
 REMOTE_DEFAULT = 'https://localhost/api'
 COMMAND_DEFAULT = 'ping'
 CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif.yaml'
+
+COLS_DEFAULT = ['id','provider','tlp','group','observable','confidence',
+  'firsttime','lasttime','reporttime','altid','altid_tlp','tags']
+
+def make_table(cols=COLS_DEFAULT,rows=[])
+  table = Terminal::Table.new :headings => cols
+
+  if rows.is_a?(Hash) # only got one
+    rows = [rows]
+  end
+
+  for obs in rows.sort_by { |hsh| hsh['reporttime'] }
+    rr = []
+    for col in cols
+      y = obs[col]
+      if y.is_a?(Array)
+        y = y.join(',')
+      end
+      rr << y
+    end
+    table << rr
+  end
+  return table
+end
 
 def main(argv)
   command = COMMAND_DEFAULT
@@ -20,9 +45,10 @@ def main(argv)
   logger.level = Logger::FATAL
 
   conf = {}
-  conf['remote'] = REMOTE_DEFAULT
-  conf['logger'] = logger
-  conf['config_path'] = CONFIG_PATH_DEFAULT
+  conf['remote']        = REMOTE_DEFAULT
+  conf['logger']        = logger
+  conf['columns']       = COLS_DEFAULT
+  conf['config_path']   = CONFIG_PATH_DEFAULT
 
   parser = OptionParser.new do |op|
     op.on('-R', "--remote REMOTE", String, "Set host (default: https://localhost/api)") do |s|
@@ -66,12 +92,17 @@ def main(argv)
     op.on('-C','--conf CONFIG_PATH', String, "set config path, default #{CONFIG_PATH_DEFAULT}") do |s|
       conf['config_path'] = s
     end
+
+    op.on('--cols COLUMNS', String, "Columns to output...") do |s|
+      conf['columns'] = s
+    end
   end
 
   parser.parse!(argv)
   if(File.exists?(conf['config_path']))
-    localconf = YAML.load_file(conf['config_path'].to_s)['client']
-    conf.merge!(localconf)
+    localconf = YAML.load_file(conf['config_path'].to_s)
+    conf.merge!(localconf['client']) if localconf['client']
+    ## TODO - format
   end
 
   cli = CIF::SDK::Client.new(conf)
@@ -87,9 +118,13 @@ def main(argv)
       end
     end
   when 'query'
-    cli.search(conf)
+    r = cli.search(conf)
+    table = make_table(cols=conf['columns'],rows=r)
+    #puts table
   when 'submit'
-    cli.submit(conf)
+    r = cli.submit(data=conf['submission'])
+    table = make_table(cols=conf['columns'],rows=r)
+    #puts table
   end
 end
 

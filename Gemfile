@@ -17,4 +17,5 @@ group :production do
   gem 'logger'
   gem 'logger/colors'
   gem 'parseconfig'
+  gem "terminal-table"
 end
