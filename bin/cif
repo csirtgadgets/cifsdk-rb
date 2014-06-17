@@ -97,7 +97,7 @@ parser = OptionParser.new do |op|
   end
 end
 
-parser.parse!(argv)
+parser.parse!(ARGV)
 if(File.exists?(conf['config_path']))
   localconf = YAML.load_file(conf['config_path'].to_s)
   conf.merge!(localconf['client']) if localconf['client']
