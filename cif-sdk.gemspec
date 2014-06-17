@@ -13,11 +13,11 @@ Gem::Specification.new do |spec|
   spec.email           = %q{wes@barely3am.com}
   spec.homepage        = %q{https://github.com/csirtgadgets/rb-cif-sdk}
   spec.licenses        = 'LGPL-3'
-  
-  spec.files         = `git ls-files -z`.split("\x0")
-  spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
-  spec.require_paths = ["lib"]
+
+  spec.files          = `git ls-files -z`.split("\x0")
+  spec.executables    = ['cif.rb']
+  spec.test_files     = spec.files.grep(%r{^(test|spec|features)/})
+  spec.require_paths  = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.6"
   spec.add_development_dependency "rake"
