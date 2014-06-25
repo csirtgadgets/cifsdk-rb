@@ -15,7 +15,7 @@ Gem::Specification.new do |spec|
   spec.licenses        = 'LGPL-3'
 
   spec.files          = `git ls-files -z`.split("\x0")
-  spec.executables    = ['cif.rb']
+  spec.executables    = ['cif']
   spec.test_files     = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths  = ["lib"]
 

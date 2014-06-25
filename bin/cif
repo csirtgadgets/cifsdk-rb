@@ -10,7 +10,7 @@ require 'logger/colors'
 require 'yaml'
 require 'terminal-table'
 
-REMOTE_DEFAULT = 'https://localhost/api'
+REMOTE_DEFAULT = 'https://localhost/v2'
 COMMAND_DEFAULT = 'ping'
 CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif.yaml'
 
@@ -44,13 +44,12 @@ logger = Logger.new(STDERR)
 logger.level = Logger::FATAL
 
 conf = {}
-conf['remote']        = REMOTE_DEFAULT
 conf['logger']        = logger
 conf['columns']       = COLS_DEFAULT
 conf['config_path']   = CONFIG_PATH_DEFAULT
 
 parser = OptionParser.new do |op|
-  op.on('-R', "--remote REMOTE", String, "Set host (default: https://localhost/api)") do |s|
+  op.on('-R', "--remote REMOTE", String, "Set host (default: " + REMOTE_DEFAULT + ")") do |s|
     conf['remote'] = s
   end
 
@@ -98,15 +97,20 @@ parser = OptionParser.new do |op|
 end
 
 parser.parse!(ARGV)
+remote_override = conf['remote']
 if(File.exists?(conf['config_path']))
   localconf = YAML.load_file(conf['config_path'].to_s)
   conf.merge!(localconf['client']) if localconf['client']
   ## TODO - format
 end
 
+conf['remote'] = remote_override if remote_override
+
+
 cli = CIF::SDK::Client.new(conf)
 case command
 when 'ping'
+  logger.level = Logger::INFO
   for i in 0 ... 3
     ret = cli.ping()
     if(ret)

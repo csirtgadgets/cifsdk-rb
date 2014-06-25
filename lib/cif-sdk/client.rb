@@ -18,7 +18,6 @@ module CIF
 
       def _make_request(uri='',type='get',params={})
         params['token'] = @token
-        pp type
         case type
         when 'get'
           self.logger.debug { "uri: #{uri}" }
@@ -49,7 +48,7 @@ module CIF
       def ping
         start = Time.now()
 
-        rv = self._make_request(uri='/_ping')
+        rv = self._make_request(uri='/ping')
         return nil unless(rv)
 
         return (Time.now()-start)
@@ -69,7 +68,7 @@ module CIF
           'nolog' => nlog,
         }
 
-        res = self._make_request(uri="/#{q}",type='get',params=params)
+        res = self._make_request(uri="/observables",type='get',params=params)
         return nil unless(res)
         return res
 
@@ -78,6 +77,7 @@ module CIF
       def submit(data=nil)
         #  '{"observable":"example.com","confidence":"50",":tlp":"amber",
         #  "provider":"me.com","tags":["zeus","botnet"]}'
+        #data = JSON.generate(data) if data.is_a?(::Hash)
         params = {
           'data' => data
         }

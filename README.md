@@ -57,7 +57,7 @@ obs = {
   tags			=> ['zeus','botnet'],
   confidence	=> 85,
 }
-r = cli.submit(data=json.generate(obs))
+r = cli.submit(data=JSON.generate(obs))
 ```
 
 # License and Copyright
