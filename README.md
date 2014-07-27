@@ -23,7 +23,7 @@ require 'cif-sdk'
 
 config = {
   token  => '1234',
-  remote => 'https://localhost/api'
+  remote => 'https://localhost/v2'
 }
 
 cli = CIF::SDK::Client.new(config)

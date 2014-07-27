@@ -7,7 +7,7 @@ module CIF
   module SDK
     class Client
       attr_accessor :remote, :token, :verify_ssl, :log, :handle,
-      :query, :submit, :logger, :config_path, :columns, :submission
+      :query, :submit, :logger, :config_path, :columns, :submission, :search_id
       def initialize params = {}
         params.each { |key, value| send "#{key}=", value }
         @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/0.0.1')
@@ -53,6 +53,16 @@ module CIF
 
         return (Time.now()-start)
       end
+      
+      def search_id(args)
+        params = {
+          :id  => args['search_id'],
+        }
+        
+        res = self._make_request(uri='/observables',type='get',params=params)
+        return nil unless(res)
+        return res
+      end
 
       def search(args)
         q = args['query'] || begin
@@ -66,6 +76,7 @@ module CIF
         end
         params = {
           'nolog' => nlog,
+          'q'     => q,
         }
 
         res = self._make_request(uri="/observables",type='get',params=params)

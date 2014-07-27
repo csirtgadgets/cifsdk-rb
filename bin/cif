@@ -94,6 +94,11 @@ parser = OptionParser.new do |op|
   op.on('--cols COLUMNS', String, "Columns to output...") do |s|
     conf['columns'] = s
   end
+  
+  op.on('--search-id ID', String, "Find by Id") do |s|
+    command = 'search-id'
+    conf['search_id'] = s
+  end
 end
 
 parser.parse!(ARGV)
@@ -120,6 +125,10 @@ when 'ping'
       break
     end
   end
+when 'search-id'
+  r = cli.search_id(conf)
+  table = make_table(cols=conf['columns'],rows=r)
+  puts table
 when 'query'
   r = cli.search(conf)
   table = make_table(cols=conf['columns'],rows=r)
