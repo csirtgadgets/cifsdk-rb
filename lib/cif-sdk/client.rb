@@ -68,7 +68,7 @@ module CIF
         q = args['query']
 
         params = {
-            q   => q,
+            'q'   => q,
         }
 
         res = self._make_request(uri="/countries",type='get',params=params)
