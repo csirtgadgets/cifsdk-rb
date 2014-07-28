@@ -64,6 +64,18 @@ module CIF
         return res
       end
 
+      def search_cc(args)
+        q = args['query']
+
+        params = {
+            q   => q,
+        }
+
+        res = self._make_request(uri="/countries",type='get',params=params)
+        return nil unless(res)
+        return res
+      end
+
       def search(args)
         q = args['query'] || begin
           self.logger.fatal { 'missing param: query '}
