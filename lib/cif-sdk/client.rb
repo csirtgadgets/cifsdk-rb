@@ -18,15 +18,19 @@ module CIF
 
       def _make_request(uri='',type='get',params={})
         params['token'] = @token
+        extheaders = {
+          'Accept' => 'application/json',
+          'X-CIF-Media-Type' => 'vnd.cif.2',
+        }
         case type
         when 'get'
           self.logger.debug { "uri: #{uri}" }
           uri = URI(@remote + uri)
-          res = @handle.get(uri,params)
+          res = @handle.get(uri,params,extheaders)
         when 'post'
           uri = URI(@remote + '/?token=' + @token.to_s)
           self.logger.debug { "uri: #{uri}.to_s" }
-          res = @handle.post(uri,params['data'])
+          res = @handle.post(uri,params['data'],extheaders)
         end
 
         case res.status_code
@@ -53,12 +57,12 @@ module CIF
 
         return (Time.now()-start)
       end
-      
+
       def search_id(args)
         params = {
           :id  => args['search_id'],
         }
-        
+
         res = self._make_request(uri='/observables',type='get',params=params)
         return nil unless(res)
         return res

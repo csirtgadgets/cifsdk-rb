@@ -10,9 +10,9 @@ require 'logger/colors'
 require 'yaml'
 require 'terminal-table'
 
-REMOTE_DEFAULT = 'https://localhost/v2'
+REMOTE_DEFAULT = 'https://localhost2'
 COMMAND_DEFAULT = 'ping'
-CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif.yaml'
+CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif'
 
 COLS_DEFAULT = ['id','provider','tlp','group','observable','confidence',
   'firsttime','lasttime','reporttime','altid','altid_tlp','tags']
@@ -94,7 +94,7 @@ parser = OptionParser.new do |op|
   op.on('--cols COLUMNS', String, "Columns to output...") do |s|
     conf['columns'] = s
   end
-  
+
   op.on('--search-id ID', String, "Find by Id") do |s|
     command = 'search-id'
     conf['search_id'] = s
@@ -106,7 +106,6 @@ remote_override = conf['remote']
 if(File.exists?(conf['config_path']))
   localconf = YAML.load_file(conf['config_path'].to_s)
   conf.merge!(localconf['client']) if localconf['client']
-  ## TODO - format
 end
 
 conf['remote'] = remote_override if remote_override
