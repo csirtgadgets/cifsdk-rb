@@ -19,8 +19,7 @@ module CIF
       def _make_request(uri='',type='get',params={})
         params['token'] = @token
         extheaders = {
-          'Accept' => 'application/json',
-          'X-CIF-Media-Type' => 'vnd.cif.2',
+          'Accept' => 'application/vnd.cif.v2+json',
         }
         case type
         when 'get'
