@@ -2,6 +2,7 @@ require 'json'
 require 'httpclient'
 require 'uri'
 require 'pp'
+require 'cif-sdk'
 
 module CIF
   module SDK
@@ -10,7 +11,7 @@ module CIF
       :query, :submit, :logger, :config_path, :columns, :submission, :search_id
       def initialize params = {}
         params.each { |key, value| send "#{key}=", value }
-        @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/0.0.1')
+        @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/' + CIF::SDK::VERSION) ##TODO from version.rb
         unless @verify_ssl
           @handle.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
@@ -19,11 +20,12 @@ module CIF
       def _make_request(uri='',type='get',params={})
         params['token'] = @token
         extheaders = {
-          'Accept' => 'application/vnd.cif.v2+json',
+          'Accept' => 'application/vnd.cif.' + API_VERSION + '+json',
         }
         case type
         when 'get'
-          self.logger.debug { "uri: #{uri}" }
+          self.logger.debug { "uri: " + @remote + "#{uri}" }
+          self.logger.debug { "params: #{params}" }
           uri = URI(@remote + uri)
           res = @handle.get(uri,params,extheaders)
         when 'post'
@@ -57,47 +59,13 @@ module CIF
         return (Time.now()-start)
       end
 
-      def search_id(args)
-        params = {
-          :id  => args['search_id'],
-        }
-
-        res = self._make_request(uri='/observables',type='get',params=params)
-        return nil unless(res)
-        return res
-      end
-
-      def search_cc(args)
-        q = args['query']
-
-        params = {
-            'q'   => q,
-        }
-
-        res = self._make_request(uri="/countries",type='get',params=params)
-        return nil unless(res)
-        return res
-      end
-
-      def search(args)
-        q = args['query'] || begin
-          self.logger.fatal { 'missing param: query '}
-          return nil
+      def search(filters)
+        if filters['id']
+          res = self._make_request(uri="/observables/" + filters['id'],type='get')
+        else
+          res = self._make_request(uri="/observables",type='get',params=filters)
         end
-
-        nlog = false
-        unless @log == nil
-          nlog = true
-        end
-        params = {
-          'nolog' => nlog,
-          'q'     => q,
-        }
-
-        res = self._make_request(uri="/observables",type='get',params=params)
-        return nil unless(res)
         return res
-
       end
 
       def submit(data=nil)

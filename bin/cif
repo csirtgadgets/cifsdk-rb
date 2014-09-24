@@ -10,12 +10,11 @@ require 'logger/colors'
 require 'yaml'
 require 'terminal-table'
 
-REMOTE_DEFAULT = 'https://localhost2'
-COMMAND_DEFAULT = 'ping'
+REMOTE_DEFAULT = 'https://localhost'
+COMMAND_DEFAULT = 'search'
 CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif'
 
-COLS_DEFAULT = ['id','provider','tlp','group','observable','confidence',
-  'firsttime','lasttime','reporttime','altid','altid_tlp','tags']
+COLS_DEFAULT = ['reporttime','provider','cc','tlp','group','confidence','tags','observable']
 
 def make_table(cols=COLS_DEFAULT,rows=[])
   table = Terminal::Table.new :headings => cols
@@ -48,6 +47,8 @@ conf['logger']        = logger
 conf['columns']       = COLS_DEFAULT
 conf['config_path']   = CONFIG_PATH_DEFAULT
 
+filters = {}
+
 parser = OptionParser.new do |op|
   op.on('-R', "--remote REMOTE", String, "Set host (default: " + REMOTE_DEFAULT + ")") do |s|
     conf['remote'] = s
@@ -67,7 +68,7 @@ parser = OptionParser.new do |op|
 
   op.on('-q', '--query QUERY', String, 'search for something') do |s|
     command = 'query'
-    conf['query'] = s
+    filters['observable'] = s
   end
 
   op.on('-n', '--[no-]log', 'do not log the search') do |s|
@@ -96,8 +97,32 @@ parser = OptionParser.new do |op|
   end
 
   op.on('--search-id ID', String, "Find by Id") do |s|
-    command = 'search-id'
-    conf['search_id'] = s
+    filters['id'] = s
+  end
+
+  op.on('--tags STRING', String, 'Filter by tags') do |s|
+    filters['tags'] = s
+  end
+  op.on('--cc STRING', String, 'Filter by country code') do |s|
+    filters['cc'] = s
+  end
+  op.on('--application STRING', String, 'Filter by application') do |s|
+    filters['application'] = s
+  end
+  op.on('--asn FLOAT', String, 'Filter by asn') do |s|
+    filters['asn'] = s
+  end
+  op.on('--otype STRING', String, 'Filter by observable type (ipv4, fqdn, etc..)') do |s|
+    filters['otype'] = s
+  end
+  op.on('--provider STRING', String, 'Filter by provider') do |s|
+    filters['provider'] = s
+  end
+  op.on('-c INT', '--confidence', String, 'Filter by confidence') do |s|
+    filters['confidence'] = s
+  end
+  op.on('--group STRING', String, 'Filter by group') do |s|
+    filters['group'] = s
   end
 end
 
@@ -109,7 +134,6 @@ if(File.exists?(conf['config_path']))
 end
 
 conf['remote'] = remote_override if remote_override
-
 
 cli = CIF::SDK::Client.new(conf)
 case command
@@ -125,11 +149,11 @@ when 'ping'
     end
   end
 when 'search-id'
-  r = cli.search_id(conf)
+  r = cli.search_id(filters)
   table = make_table(cols=conf['columns'],rows=r)
   puts table
-when 'query'
-  r = cli.search(conf)
+when 'search'
+  r = cli.search(filters)
   table = make_table(cols=conf['columns'],rows=r)
   puts table
 when 'submit'
