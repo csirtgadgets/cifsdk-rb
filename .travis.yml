@@ -10,4 +10,4 @@ notifications:
 branches:
     only:
         - master
-        - /^release-.*$/
+        - staging
