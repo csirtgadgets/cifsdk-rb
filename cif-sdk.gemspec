@@ -1,6 +1,6 @@
 lib = File.expand_path('../lib',__FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'cif-sdk'
+require 'cif-sdk/version'
 
 # http://bundler.io/v1.6/rubygems.html
 
@@ -20,7 +20,8 @@ Gem::Specification.new do |spec|
   spec.require_paths  = ["lib"]
 
   spec.add_development_dependency "bundler", "~> 1.6"
-  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rake", '~> 0'
 
-  spec.add_runtime_dependency 'httpclient'
+  spec.add_runtime_dependency 'httpclient', '~> 0'
+  spec.add_runtime_dependency 'uri', '~> 0'
 end
