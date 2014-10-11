@@ -75,7 +75,7 @@ module CIF
         params = {
           'data' => data
         }
-        res = self._make_request(uri='',type='post',params)
+        res = self._make_request(uri='/observables',type='put',params)
         return nil unless(res)
         return res
       end

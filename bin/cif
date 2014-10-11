@@ -14,7 +14,7 @@ REMOTE_DEFAULT = 'https://localhost'
 COMMAND_DEFAULT = 'search'
 CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif'
 
-COLS_DEFAULT = ['reporttime','provider','cc','tlp','group','confidence','tags','observable']
+COLS_DEFAULT = ['reporttime','provider','cc','tlp','group','confidence','tags','observable','rdata']
 
 def make_table(cols=COLS_DEFAULT,rows=[])
   table = Terminal::Table.new :headings => cols
@@ -40,7 +40,7 @@ end
 command = COMMAND_DEFAULT
 
 logger = Logger.new(STDERR)
-logger.level = Logger::FATAL
+logger.level = Logger::ERROR
 
 conf = {}
 conf['logger']        = logger
@@ -66,8 +66,13 @@ parser = OptionParser.new do |op|
     command = 'ping'
   end
 
-  op.on('-q', '--query QUERY', String, 'search for something') do |s|
-    command = 'query'
+  op.on('-q', '--query STRING', String, 'search for something') do |s|
+    command = 'search'
+    filters['observable'] = s
+  end
+
+  op.on('-s', '--search STRING', String, 'search for something') do |s|
+    command = 'search'
     filters['observable'] = s
   end
 
@@ -124,6 +129,10 @@ parser = OptionParser.new do |op|
   op.on('--group STRING', String, 'Filter by group') do |s|
     filters['group'] = s
   end
+
+  op.on('--rdata STRING', String, 'Filter by rdata') do |s|
+    filters['rdata'] = s
+  end
 end
 
 parser.parse!(ARGV)
@@ -135,7 +144,25 @@ end
 
 conf['remote'] = remote_override if remote_override
 
+# http://stackoverflow.com/a/2149183/740097
+begin
+  mandatory = ['token','remote']
+  missing = mandatory.select{ |param| conf[param].nil? }
+  if not missing.empty?
+    puts "Missing options: #{missing.join(', ')}"
+    puts parser
+    exit
+  end
+rescue OptionParser::InvalidOption, OptionParser::MissingArgument
+  puts $!.to_s
+  puts parser
+  exit
+end
+
+logger.debug("Performing task with options: #{conf.inspect}")
+
 cli = CIF::SDK::Client.new(conf)
+
 case command
 when 'ping'
   logger.level = Logger::INFO
@@ -153,6 +180,7 @@ when 'search-id'
   table = make_table(cols=conf['columns'],rows=r)
   puts table
 when 'search'
+  logger.info('running search...')
   r = cli.search(filters)
   table = make_table(cols=conf['columns'],rows=r)
   puts table
