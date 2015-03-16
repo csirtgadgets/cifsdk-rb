@@ -19,7 +19,7 @@ module CIF
 
         @headers = {
             'Accept' => 'application/vnd.cif.v' + CIF::SDK::API_VERSION + '+json',
-            'Authorization' => 'Token token=' + @token,
+            'Authorization' => 'Token token=' + params['token'].to_s,
             'Content-Type' => 'application/json',
             'User-Agent' => 'cif-sdk-ruby/' + CIF::SDK::VERSION
         }

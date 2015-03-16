@@ -3,7 +3,7 @@ require 'cif-sdk'
 
 # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/minitest/unit/rdoc/MiniTest.html
 
-@remote = 'https://localhost:8444/api'
+@remote = 'https://localhost'
 @token = '1234444'
 
 class TestCifSdk < Minitest::Test
