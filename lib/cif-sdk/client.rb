@@ -3,35 +3,41 @@ require 'httpclient'
 require 'uri'
 require 'pp'
 require 'cif-sdk'
+require 'cif-sdk/version'
 
 module CIF
   module SDK
     class Client
-      attr_accessor :remote, :token, :verify_ssl, :log, :handle,
+      attr_accessor :remote, :token, :no_verify_ssl, :log, :handle,
       :query, :submit, :logger, :config_path, :columns, :submission, :search_id
       def initialize params = {}
         params.each { |key, value| send "#{key}=", value }
-        @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/' + CIF::SDK::VERSION) ##TODO from version.rb
+        @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/' + CIF::SDK::VERSION)
         unless @verify_ssl
           @handle.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
         end
+
+        @headers = {
+            'Accept' => 'application/vnd.cif.v' + CIF::SDK::API_VERSION + '+json',
+            'Authorization' => 'Token token=' + @token,
+            'Content-Type' => 'application/json',
+            'User-Agent' => 'cif-sdk-ruby/' + CIF::SDK::VERSION
+        }
       end
 
       def _make_request(uri='',type='get',params={})
-        params['token'] = @token
-        extheaders = {
-          'Accept' => 'application/vnd.cif.' + API_VERSION + '+json',
-        }
+
         case type
         when 'get'
           self.logger.debug { "uri: " + @remote + "#{uri}" }
           self.logger.debug { "params: #{params}" }
+
           uri = URI(@remote + uri)
-          res = @handle.get(uri,params,extheaders)
-        when 'post'
-          uri = URI(@remote + '/?token=' + @token.to_s)
+          res = @handle.get(uri,params, @headers)
+        when 'put'
+          uri = URI(@remote)
           self.logger.debug { "uri: #{uri}.to_s" }
-          res = @handle.post(uri,params['data'],extheaders)
+          res = @handle.post(uri,params['data'],@headers)
         end
 
         case res.status_code

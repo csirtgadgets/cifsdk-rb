@@ -12,7 +12,7 @@ require 'terminal-table'
 
 REMOTE_DEFAULT = 'https://localhost'
 COMMAND_DEFAULT = 'search'
-CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif'
+CONFIG_PATH_DEFAULT = ENV['HOME'] + '/.cif.yml'
 
 COLS_DEFAULT = ['reporttime','provider','cc','tlp','group','confidence','tags','observable','rdata']
 
@@ -64,6 +64,10 @@ parser = OptionParser.new do |op|
 
   op.on('-p', '--ping', 'ping the remote') do |s|
     command = 'ping'
+  end
+
+  op.on('-l INT', '--limit', Integer, 'limit results') do |s|
+    filters['limit'] = s
   end
 
   op.on('-q', '--query STRING', String, 'search for something') do |s|

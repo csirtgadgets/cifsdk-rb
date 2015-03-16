@@ -17,13 +17,20 @@ $ sudo gem install cif-sdk
 ```
 
 # Examples
+## Config
+```yaml
+~/.cif.yml
+client:
+    remote: https://localhost
+    token: 123412341234
+````
 ## Client
 ```ruby
 require 'cif-sdk'
 
 config = {
   token  => '1234',
-  remote => 'https://localhost/v2'
+  remote => 'https://localhost'
 }
 
 cli = CIF::SDK::Client.new(config)
