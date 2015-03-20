@@ -80,8 +80,8 @@ parser = OptionParser.new do |op|
     filters['observable'] = s
   end
 
-  op.on('-n', '--[no-]log', 'do not log the search') do |s|
-    conf['log'] = false
+  op.on('-n', '--nolog', Integer, 'do not log the search') do |s|
+    filters['nolog'] = 1
   end
 
   op.on('--submit JSON', String, 'submit a json encoded string') do |s|
