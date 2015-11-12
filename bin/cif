@@ -3,7 +3,7 @@
 # https://github.com/splunk/splunk-sdk-ruby/blob/master/examples/run_examples.rb
 
 require 'optparse'
-require 'cif-sdk'
+require 'cifsdk'
 require 'pp'
 require 'logger'
 require 'logger/colors'
@@ -165,7 +165,7 @@ end
 
 logger.debug("Performing task with options: #{conf.inspect}")
 
-cli = CIF::SDK::Client.new(conf)
+cli = CIFSDK::Client.new(conf)
 
 case command
 when 'ping'

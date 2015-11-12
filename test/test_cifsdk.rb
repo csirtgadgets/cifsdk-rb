@@ -1,5 +1,5 @@
 require 'minitest/autorun'
-require 'cif-sdk'
+require 'cifsdk'
 
 # http://www.ruby-doc.org/stdlib-1.9.3/libdoc/minitest/unit/rdoc/MiniTest.html
 
@@ -8,7 +8,7 @@ require 'cif-sdk'
 
 class TestCifSdk < Minitest::Test
   def setup
-    @cli = CIF::SDK::Client.new(:remote => @remote, :token => @token)
+    @cli = CIFSDK::Client.new(:remote => @remote, :token => @token)
   end
   
   def test_token
