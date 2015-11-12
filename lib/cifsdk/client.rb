@@ -11,7 +11,7 @@ module CIFSDK
     :query, :submit, :logger, :config_path, :columns, :submission, :search_id
     def initialize params = {}
       params.each { |key, value| send "#{key}=", value }
-      @handle = HTTPClient.new(:agent_name => 'rb-cif-sdk/' + CIFSDK::VERSION)
+      @handle = HTTPClient.new(:agent_name => 'rb-cifsdk/' + CIFSDK::VERSION)
       unless @verify_ssl
         @handle.ssl_config.verify_mode = OpenSSL::SSL::VERIFY_NONE
       end
