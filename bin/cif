@@ -137,6 +137,10 @@ parser = OptionParser.new do |op|
   op.on('--rdata STRING', String, 'Filter by rdata') do |s|
     filters['rdata'] = s
   end
+
+  op.on('--tlp STRING', String, 'Filter by tlp') do |s|
+    filters['tlp'] = s
+  end
 end
 
 parser.parse!(ARGV)
